@@ -1,15 +1,20 @@
 const jwt = require ('jsonwebtoken');
+const { revokedTokens } = require('../controllers/userController');
 
 
 
 
 exports.userAuth = (req, res, next) => {
     const hasAuthorization = req.headers.authorization;
-    console.log(hasAuthorization)
-    console.log(req.rawHeaders)
-    if(!hasAuthorization) {
+
+    if(!hasAuthorization ) {
         return res.status (401).json({
             message: 'Not Authorized to perform this action'
+        });
+    }
+    else if(revokedTokens) {
+        return res.status (401).json({
+            message: 'Session expired'
         });
     }
 
